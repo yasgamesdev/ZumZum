@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -544,6 +544,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d73b248ca997bca40a57d484637112d7, type: 3}
   zumInstances: []
   insideTop: {fileID: 1393393051}
+  destroyParticlePrefab: {fileID: 1675107398216300, guid: e341bbc02b91fd84f99ddb5b5e81b15d,
+    type: 2}
 --- !u!82 &1172666297
 AudioSource:
   m_ObjectHideFlags: 0

@@ -13,6 +13,12 @@ public class ZumGenerator : MonoBehaviour
 
     AudioSource audioSource;
 
+    bool isRemoveMode = false;
+    ZumType removeZumType;
+    List<GameObject> removeZumInstances = new List<GameObject>();
+
+    public GameObject destroyParticlePrefab;
+
     // Use this for initialization
     void Start()
     {
@@ -34,20 +40,56 @@ public class ZumGenerator : MonoBehaviour
 
         if(Input.GetMouseButton(1))
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            GameObject hitGameObject = GetMousePosZum();
 
-            if (Physics.Raycast(ray, out hit))
+            if(hitGameObject != null)
             {
-                GameObject hitGameObject = hit.transform.gameObject;
-                if(hitGameObject.tag == "Zum")
-                {
-                    Destroy(hitGameObject);
-                    zumInstances.Remove(hitGameObject);
+                Destroy(hitGameObject);
+                zumInstances.Remove(hitGameObject);
 
+                audioSource.Play();
+            }
+        }
+
+        if(Input.GetMouseButtonDown(2) && !isRemoveMode)
+        {
+            GameObject hitGameObject = GetMousePosZum();
+
+            if (hitGameObject != null)
+            {
+                isRemoveMode = true;
+                removeZumType = hitGameObject.GetComponent<Zum>().type;
+                AddRemoveZum(hitGameObject);
+
+                audioSource.Play();
+            }
+        }
+        else if(Input.GetMouseButton(2) && isRemoveMode)
+        {
+            GameObject hitGameObject = GetMousePosZum();
+
+            if (hitGameObject != null && hitGameObject.GetComponent<Zum>().type == removeZumType)
+            {
+                if (AddRemoveZum(hitGameObject))
+                {
                     audioSource.Play();
                 }
             }
+        }
+        else if(Input.GetMouseButtonUp(2) && isRemoveMode)
+        {
+            foreach(GameObject zum in removeZumInstances)
+            {
+                isRemoveMode = false;
+                Destroy(zum);
+                zumInstances.Remove(zum);
+
+                GameObject particle = Instantiate(destroyParticlePrefab, transform);
+                particle.transform.position = zum.transform.position;
+            }
+
+            removeZumInstances.Clear();
+            audioSource.Play();
         }
     }
 
@@ -62,6 +104,37 @@ public class ZumGenerator : MonoBehaviour
             zum.GetComponent<Zum>().Init((ZumType)num, zumSprites[num]);
 
             zumInstances.Add(zum);
+        }
+    }
+
+    GameObject GetMousePosZum()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject hitGameObject = hit.transform.gameObject;
+            if (hitGameObject.tag == "Zum")
+            {
+                return hitGameObject;
+            }
+        }
+
+        return null;
+    }
+
+    bool AddRemoveZum(GameObject zum)
+    {
+        if(!removeZumInstances.Contains(zum))
+        {
+            removeZumInstances.Add(zum);
+
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
