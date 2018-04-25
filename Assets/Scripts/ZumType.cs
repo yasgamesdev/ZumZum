@@ -1,5 +1,7 @@
 ﻿public enum ZumType
 {
     Zucchi,
-    Zummy
+    Zummy,
+    Boo,
+    Ztitch
 }
